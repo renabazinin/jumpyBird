@@ -5,6 +5,7 @@
   const bestEl = document.getElementById('best');
   const startEl = document.getElementById('start');
   const gameoverEl = document.getElementById('gameover');
+  const muteBtn = document.getElementById('mute');
 
   const STORAGE_KEY = 'fallpyBest';
   let best = parseInt(localStorage.getItem(STORAGE_KEY) || '0',10);
@@ -14,6 +15,41 @@
 
   let state = 'idle'; // idle, playing, over
   let frame = 0;
+
+  // Audio (WebAudio) for jump SFX
+  let audioCtx = null;
+  const MUTE_KEY = 'fallpyMute';
+  let muted = localStorage.getItem(MUTE_KEY) === '1';
+  updateMuteButton();
+
+  function ensureAudio() {
+    if (!audioCtx) {
+      const AC = window.AudioContext || window.webkitAudioContext;
+      if (AC) audioCtx = new AC();
+    }
+  }
+
+  function sfxFlap() {
+    if (muted || !audioCtx) return;
+    const t = audioCtx.currentTime;
+    const o = audioCtx.createOscillator();
+    const g = audioCtx.createGain();
+    o.type = 'square';
+    o.frequency.setValueAtTime(920, t);
+    o.frequency.exponentialRampToValueAtTime(540, t + 0.12);
+    g.gain.setValueAtTime(0.06, t);
+    g.gain.exponentialRampToValueAtTime(0.0001, t + 0.14);
+    o.connect(g).connect(audioCtx.destination);
+    o.start(t);
+    o.stop(t + 0.14);
+  }
+
+  function updateMuteButton() {
+    if (!muteBtn) return;
+    muteBtn.setAttribute('aria-pressed', muted ? 'true' : 'false');
+    muteBtn.textContent = muted ? '🔈' : '🔊';
+    muteBtn.title = muted ? 'Unmute' : 'Mute';
+  }
 
   // Bird
   const bird = { x: WIDTH/3, y: HEIGHT/2, r: 12, vy: 0 };
@@ -37,6 +73,8 @@
     pipes = []; spawnTimer = 40; score = 0; frame = 0; speed = 2.4;
     state = 'idle'; startEl.classList.remove('hidden'); gameoverEl.classList.add('hidden');
     scoreEl.textContent = '0';
+    // reset coins HUD
+    legsCollected = 0; const coinsEl = document.getElementById('coins'); if (coinsEl) coinsEl.textContent = 'Legs: 0';
   }
 
   function spawnPipe(){
@@ -201,14 +239,26 @@
   }
 
   // input
-  function flap(){ if(state === 'idle'){ state = 'playing'; startEl.classList.add('hidden'); requestAnimationFrame(update); }
-    if(state === 'playing'){ bird.vy = FLAP; }
+  function flap(){
+    ensureAudio();
+    if(state === 'idle'){ state = 'playing'; startEl.classList.add('hidden'); requestAnimationFrame(update); }
+    if(state === 'playing'){ bird.vy = FLAP; sfxFlap(); }
     if(state === 'over'){ reset(); }
   }
 
   window.addEventListener('keydown', e => { if(e.code === 'Space' || e.code === 'ArrowUp'){ e.preventDefault(); flap(); } if(e.code === 'Enter' && state === 'over'){ reset(); } });
   canvas.addEventListener('click', e => { if(state === 'over'){ reset(); } else flap(); });
   canvas.addEventListener('touchstart', e => { e.preventDefault(); if(state === 'over'){ reset(); } else flap(); }, {passive:false});
+
+  // Mute toggle
+  if (muteBtn) {
+    muteBtn.addEventListener('click', () => {
+      muted = !muted;
+      localStorage.setItem(MUTE_KEY, muted ? '1' : '0');
+      updateMuteButton();
+      ensureAudio();
+    });
+  }
 
   // init
   reset();
