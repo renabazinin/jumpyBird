@@ -1,0 +1,20 @@
+*{box-sizing:border-box;margin:0;padding:0}
+html,body{height:100%}
+body{font-family:system-ui,Segoe UI,Roboto,Arial;background:linear-gradient(#87CEEB,#cfe9ff);display:flex;align-items:center;justify-content:center}
+#app{text-align:center}
+h1{font-size:1.25rem;margin-bottom:.25rem}
+#info{display:flex;gap:1rem;justify-content:center;margin-bottom:.25rem;font-weight:700}
+#info span{background:rgba(255,255,255,.85);padding:.2rem .5rem;border-radius:6px}
+
+/* small decorative tweaks for a cooler feel */
+#game-canvas{background:linear-gradient(#9be3ff,#bfeaff 60%, #7ad);border-radius:6px}
+#game-canvas:before{content:''}
+
+.leg-icon{display:inline-block;width:12px;height:12px;vertical-align:middle;margin-right:6px}
+#game-canvas{background:#7ad;display:block;border:4px solid #355;box-shadow:0 8px 20px rgba(0,0,0,.15);image-rendering:pixelated}
+#overlay{position:relative;margin-top:.5rem}
+#start,#gameover{background:rgba(255,255,255,.9);padding:.45rem .75rem;border-radius:6px;display:inline-block}
+.hidden{display:none}
+.controls{font-size:.8rem;color:#104; margin-top:.5rem}
+/* small responsive tweak */
+@media (max-width:420px){#game-canvas{width:92vw;height:auto}}

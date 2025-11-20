@@ -1,0 +1,26 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Fallpy Bird</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <main id="app">
+    <h1>Fallpy Bird</h1>
+    <div id="info">
+      <span id="score">0</span>
+      <span id="coins">Legs: 0</span>
+      <span id="best">Best: 0</span>
+    </div>
+    <canvas id="game-canvas" width="320" height="480" aria-label="Fallpy Bird game"></canvas>
+    <div id="overlay">
+      <div id="start">Press Space / Click to Start</div>
+      <div id="gameover" class="hidden">Game Over — Press Enter / Click to Restart</div>
+    </div>
+    <p class="controls">Controls: Space / Up = flap, Click / Tap = flap</p>
+  </main>
+  <script src="script.js"></script>
+</body>
+</html>
