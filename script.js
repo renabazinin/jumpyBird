@@ -190,7 +190,7 @@
     ctx.save();
     ctx.translate(x, y);
     ctx.rotate(Math.sin((x+y+frame)*0.02) * 0.25);
-    ctx.fillStyle = '#c05218';
+    ctx.fillStyle = '#c05318fb';
     ctx.beginPath(); ctx.ellipse(-r*0.15, 0, r, r*0.75, 0, 0, Math.PI*2); ctx.fill();
     // highlight
     ctx.fillStyle = '#e58a53'; ctx.beginPath(); ctx.ellipse(-r*0.25, -r*0.15, r*0.35, r*0.25, 0, 0, Math.PI*2); ctx.fill();
