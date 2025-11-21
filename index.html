@@ -1,44 +1,60 @@
 <!doctype html>
 <html lang="en">
+
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width,initial-scale=1" />
   <title>Fallpy Bird – Flap, Dodge, Collect</title>
-  <meta name="description" content="A polished Flappy‑style game: flap to dodge pipes, collect chicken legs, enjoy parallax backgrounds and smooth gameplay.">
-  <meta name="theme-color" content="#6ec1ff">
+  <meta name="description"
+    content="A polished Flappy‑style game: flap to dodge pipes, collect chicken legs, enjoy parallax backgrounds and smooth gameplay.">
+  <meta name="theme-color" content="#667eea">
   <meta property="og:type" content="website">
   <meta property="og:title" content="Fallpy Bird – Flap, Dodge, Collect">
-  <meta property="og:description" content="A polished Flappy‑style game with coins, parallax hills, and smooth controls.">
+  <meta property="og:description"
+    content="A polished Flappy‑style game with coins, parallax hills, and smooth controls.">
   <meta property="og:url" content="https://renabazinin.github.io/jumpyBird/">
   <meta property="og:image" content="og-image.svg">
   <meta name="twitter:card" content="summary_large_image">
   <meta name="twitter:title" content="Fallpy Bird – Flap, Dodge, Collect">
   <meta name="twitter:description" content="Flap to dodge pipes and collect chicken legs. Play now!">
   <meta name="twitter:image" content="og-image.svg">
-  <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='12' fill='%236ec1ff'/%3E%3Ccircle cx='28' cy='32' r='12' fill='%23000'/%3E%3Ccircle cx='33' cy='28' r='2' fill='%23fff'/%3E%3Crect x='40' y='30' width='12' height='4' fill='%23fff'/%3E%3Ccircle cx='52' cy='32' r='3' fill='%23fff'/%3E%3C/svg%3E">
-  <link rel="stylesheet" href="style.css">
+  <link rel="icon"
+    href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='12' fill='%236ec1ff'/%3E%3Ccircle cx='28' cy='32' r='12' fill='%23000'/%3E%3Ccircle cx='33' cy='28' r='2' fill='%23fff'/%3E%3Crect x='40' y='30' width='12' height='4' fill='%23fff'/%3E%3Ccircle cx='52' cy='32' r='3' fill='%23fff'/%3E%3C/svg%3E">
+  <link rel="stylesheet" href="menu.css">
 </head>
+
 <body>
-  <main id="app">
-    <header class="topbar">
-      <div class="logo" aria-label="Fallpy Bird logo" title="Fallpy Bird">🐦‍⬛ Fallpy <strong>Bird</strong></div>
-      <div class="toolbar">
-        <button id="mute" aria-pressed="false" title="Toggle sound">🔊</button>
-      </div>
-    </header>
-    <p class="tagline">Flap to dodge pipes, collect chicken legs, chase your best!</p>
-    <div id="info" role="status" aria-live="polite">
-      <span id="score" title="Score">0</span>
-      <span id="coins" title="Chicken legs collected">Legs: 0</span>
-      <span id="best" title="Best score">Best: 0</span>
+  <div id="menu-container">
+    <div class="bird-icon">🐦‍⬛</div>
+    <h1 class="game-title">Fallpy Bird</h1>
+    <p class="game-subtitle">Flap, Dodge, Collect!</p>
+
+    <div class="high-score-badge">
+      <div class="high-score-label">High Score</div>
+      <div class="high-score-value" id="menu-high-score">0</div>
     </div>
-    <canvas id="game-canvas" width="320" height="480" aria-label="Fallpy Bird game"></canvas>
-    <div id="overlay">
-      <div id="start">Press Space / Click to Start</div>
-      <div id="gameover" class="hidden">Game Over — Press Enter / Click to Restart</div>
+
+    <div class="menu-buttons">
+      <a href="game.html" class="btn btn-primary">🎮 Play Game</a>
     </div>
-    <p class="controls">Controls: Space / Up = flap, Click / Tap = flap</p>
-  </main>
-  <script src="script.js"></script>
+
+    <div class="instructions">
+      <h3>How to Play</h3>
+      <ul class="instructions-list">
+        <li>Press <strong>Space</strong> or <strong>Click</strong> to flap</li>
+        <li>Dodge the pipes to survive</li>
+        <li>Collect <strong>🍗 chicken legs</strong> for bonus points</li>
+        <li>Beat your high score!</li>
+      </ul>
+    </div>
+  </div>
+
+  <script>
+    // Load and display high score
+    const STORAGE_KEY = 'fallpyBest';
+    const highScore = parseInt(localStorage.getItem(STORAGE_KEY) || '0', 10);
+    document.getElementById('menu-high-score').textContent = highScore;
+  </script>
 </body>
+
 </html>

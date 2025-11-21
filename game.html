@@ -1,0 +1,68 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Fallpy Bird – Flap, Dodge, Collect</title>
+  <meta name="description" content="A polished Flappy‑style game: flap to dodge pipes, collect chicken legs, enjoy parallax backgrounds and smooth gameplay.">
+  <meta name="theme-color" content="#6ec1ff">
+  <meta property="og:type" content="website">
+  <meta property="og:title" content="Fallpy Bird – Flap, Dodge, Collect">
+  <meta property="og:description" content="A polished Flappy‑style game with coins, parallax hills, and smooth controls.">
+  <meta property="og:url" content="https://renabazinin.github.io/jumpyBird/">
+  <meta property="og:image" content="og-image.svg">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="Fallpy Bird – Flap, Dodge, Collect">
+  <meta name="twitter:description" content="Flap to dodge pipes and collect chicken legs. Play now!">
+  <meta name="twitter:image" content="og-image.svg">
+  <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='12' fill='%236ec1ff'/%3E%3Ccircle cx='28' cy='32' r='12' fill='%23000'/%3E%3Ccircle cx='33' cy='28' r='2' fill='%23fff'/%3E%3Crect x='40' y='30' width='12' height='4' fill='%23fff'/%3E%3Ccircle cx='52' cy='32' r='3' fill='%23fff'/%3E%3C/svg%3E">
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <main id="app">
+    <header class="topbar">
+      <div class="logo" aria-label="Fallpy Bird logo" title="Fallpy Bird">🐦‍⬛ Fallpy <strong>Bird</strong></div>
+      <div class="toolbar">
+        <a href="index.html" class="btn-menu" title="Return to Main Menu">🏠 Menu</a>
+        <button id="mute" aria-pressed="false" title="Toggle sound">🔊</button>
+      </div>
+    </header>
+    <p class="tagline">Flap to dodge pipes, collect chicken legs, chase your best!</p>
+    <div id="info" role="status" aria-live="polite">
+      <span id="score" title="Score">0</span>
+      <span id="coins" title="Chicken legs collected">Legs: 0</span>
+      <span id="best" title="Best score">Best: 0</span>
+    </div>
+    <canvas id="game-canvas" width="320" height="480" aria-label="Fallpy Bird game"></canvas>
+    <div id="overlay">
+      <div id="start">Press Space / Click to Start</div>
+      <div id="gameover" class="hidden">
+        <div class="gameover-modal">
+          <h2 class="gameover-title">Game Over!</h2>
+          <div id="new-record" class="new-record hidden">🏆 New Record! 🏆</div>
+          <div class="stats">
+            <div class="stat-item">
+              <span class="stat-label">Score</span>
+              <span class="stat-value" id="final-score">0</span>
+            </div>
+            <div class="stat-item">
+              <span class="stat-label">🍗 Legs</span>
+              <span class="stat-value" id="final-legs">0</span>
+            </div>
+            <div class="stat-item">
+              <span class="stat-label">Best</span>
+              <span class="stat-value" id="final-best">0</span>
+            </div>
+          </div>
+          <div class="gameover-buttons">
+            <button id="play-again" class="btn-game btn-primary">🔄 Play Again</button>
+            <a href="index.html" class="btn-game btn-secondary">🏠 Main Menu</a>
+          </div>
+        </div>
+      </div>
+    </div>
+    <p class="controls">Controls: Space / Up = flap, Click / Tap = flap</p>
+  </main>
+  <script src="script.js"></script>
+</body>
+</html>
