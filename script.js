@@ -6,6 +6,16 @@
   const startEl = document.getElementById('start');
   const gameoverEl = document.getElementById('gameover');
   const muteBtn = document.getElementById('mute');
+  const scoreboardEl = document.getElementById('scoreboard');
+  const sbScoreEl = document.getElementById('sb-score');
+  const sbLegsEl = document.getElementById('sb-legs');
+  const playerNameEl = document.getElementById('player-name');
+  const saveScoreBtn = document.getElementById('save-score');
+  const playAgainBtn = document.getElementById('play-again');
+  const closeScoreBtn = document.getElementById('close-scoreboard');
+  const leaderboardListEl = document.getElementById('leaderboard-list');
+
+  const LB_KEY = 'fallpyLeaderboard';
 
   const STORAGE_KEY = 'fallpyBest';
   let best = parseInt(localStorage.getItem(STORAGE_KEY) || '0',10);
@@ -51,6 +61,40 @@
     muteBtn.title = muted ? 'Unmute' : 'Mute';
   }
 
+  // Leaderboard helpers
+  function loadLeaderboard() {
+    try {
+      const raw = localStorage.getItem(LB_KEY) || '[]';
+      return JSON.parse(raw);
+    } catch (e) { return []; }
+  }
+
+  function saveLeaderboard(entries) {
+    localStorage.setItem(LB_KEY, JSON.stringify(entries.slice(0, 10)));
+  }
+
+  function renderLeaderboard() {
+    const entries = loadLeaderboard();
+    leaderboardListEl.innerHTML = '';
+    if (!entries.length) {
+      const li = document.createElement('li'); li.textContent = 'No scores yet — be the first!'; leaderboardListEl.appendChild(li); return;
+    }
+    entries.forEach(e => {
+      const li = document.createElement('li');
+      const d = new Date(e.date).toLocaleDateString();
+      li.textContent = `${e.name} — ${e.score} pts (${e.legs} legs) • ${d}`;
+      leaderboardListEl.appendChild(li);
+    });
+  }
+
+  function saveToLeaderboard(name, scoreVal, legsVal) {
+    const entries = loadLeaderboard();
+    entries.push({ name: name || 'Player', score: scoreVal, legs: legsVal, date: (new Date()).toISOString() });
+    entries.sort((a,b) => b.score - a.score || b.legs - a.legs);
+    saveLeaderboard(entries);
+    renderLeaderboard();
+  }
+
   // Bird
   const bird = { x: WIDTH/3, y: HEIGHT/2, r: 12, vy: 0 };
   const GRAVITY = 0.45; const FLAP = -8.5;
@@ -75,6 +119,9 @@
     scoreEl.textContent = '0';
     // reset coins HUD
     legsCollected = 0; const coinsEl = document.getElementById('coins'); if (coinsEl) coinsEl.textContent = 'Legs: 0';
+    // ensure scoreboard hidden and save button reset
+    if (typeof hideScoreboard === 'function') hideScoreboard();
+    if (saveScoreBtn){ saveScoreBtn.disabled = false; saveScoreBtn.textContent = 'Save to Leaderboard'; }
   }
 
   function spawnPipe(){
@@ -109,7 +156,7 @@
 
       // scoring
       for(let p of pipes){
-        if(!p.passed && p.x + PIPE_W < bird.x - bird.r){ p.passed = true; score++; scoreEl.textContent = score; speed += 0.02; }
+        if(!p.passed && p.x + PIPE_W < bird.x - bird.r){ p.passed = true; score++; scoreEl.textContent = score; speed += 0.02; updateBest(); }
       }
 
       // move coins (they share the same forward speed as pipes)
@@ -133,6 +180,7 @@
         const dx = bird.x - c.x; const dy = bird.y - c.y; const dist2 = dx*dx + dy*dy;
         if (dist2 < (bird.r + c.r)*(bird.r + c.r)) {
           c.collected = true; legsCollected++; document.getElementById('coins').textContent = 'Legs: ' + legsCollected; score += 2; scoreEl.textContent = score; // reward extra score
+          updateBest();
         }
       }
     }
@@ -143,6 +191,16 @@
   function gameOver(){
     state = 'over'; gameoverEl.classList.remove('hidden');
     if(score > best){ best = score; localStorage.setItem(STORAGE_KEY, best); bestEl.textContent = 'Best: ' + best; }
+    // show scoreboard modal with results and leaderboard
+    showScoreboard();
+  }
+
+  function updateBest(){
+    if (score > best) {
+      best = score;
+      localStorage.setItem(STORAGE_KEY, best);
+      bestEl.textContent = 'Best: ' + best;
+    }
   }
 
   function draw(){
@@ -210,6 +268,36 @@
     }
   }
 
+  // Scoreboard modal control
+  function showScoreboard(){
+    if (!scoreboardEl) return;
+    sbScoreEl.textContent = score;
+    sbLegsEl.textContent = legsCollected;
+    playerNameEl.value = (localStorage.getItem('fallpyName') || '');
+    renderLeaderboard();
+    scoreboardEl.classList.remove('hidden');
+  }
+
+  function hideScoreboard(){
+    if (!scoreboardEl) return;
+    scoreboardEl.classList.add('hidden');
+  }
+
+  if (saveScoreBtn) {
+    saveScoreBtn.addEventListener('click', () => {
+      const name = (playerNameEl.value || 'Player').slice(0,20);
+      localStorage.setItem('fallpyName', name);
+      saveToLeaderboard(name, score, legsCollected);
+      saveScoreBtn.disabled = true; saveScoreBtn.textContent = 'Saved';
+    });
+  }
+  if (playAgainBtn) {
+    playAgainBtn.addEventListener('click', () => { hideScoreboard(); reset(); });
+  }
+  if (closeScoreBtn) {
+    closeScoreBtn.addEventListener('click', () => hideScoreboard());
+  }
+
   function circleRectCollision(cx,cy,r,rect){
     const rx = rect.x; const ry = rect.y; const rw = rect.w; const rh = rect.h;
     const closestX = clamp(cx, rx, rx+rw);
@@ -261,5 +349,6 @@
   }
 
   // init
+  hideScoreboard();
   reset();
 })();
